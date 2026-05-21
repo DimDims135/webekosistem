@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Modul Ekosistem - Shelly Apriliani D.W.</title>
+    <style>
+        :root { --primary: #2e7d32; --accent: #ff9800; --bg: #f4f6f8; }
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; background: var(--bg); padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        header { text-align: center; border-bottom: 4px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; }
+        
+        /* Layout Grid */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 30px 0; }
+        .card { padding: 15px; border-radius: 8px; border: 1px solid #ddd; background: #fff; }
+        .card h4 { color: var(--primary); margin: 0 0 10px 0; }
+        
+        /* Simulasi */
+        .sim-box { background: #fdfdfd; border: 2px dashed var(--primary); padding: 20px; border-radius: 10px; margin-top: 20px; }
+        .trophic-card { width: 100%; max-width: 300px; margin: 5px auto; padding: 10px; background: #e8f5e9; border: 2px solid var(--primary); border-radius: 10px; text-align: center; }
+        
+        /* Kuis */
+        .quiz-container { background: #e3f2fd; padding: 25px; border-radius: 10px; margin-top: 40px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; background: var(--primary); color: white; cursor: pointer; margin: 5px; }
+        .btn:hover { background: #1b5e20; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Modul Pembelajaran: Ekosistem</h1>
+        <p>Kelas: X-3 | Disusun oleh: <b>Shelly Apriliani Devi Wulansari</b></p>
+    </header>
+
+    <section>
+        <h2>1. Komponen Penyusun</h2>
+        <div class="card-grid">
+            <div class="card"><h4>Produsen</h4><p>Autotrof pengubah energi surya.</p></div>
+            <div class="card"><h4>Konsumen</h4><p>Heterotrof pemakan energi.</p></div>
+            <div class="card"><h4>Dekomposer</h4><p>Pengurai materi organik.</p></div>
+            <div class="card"><h4>Abiotik</h4><p>Faktor fisik pendukung.</p></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>2. Simulasi Aliran Energi</h2>
+        <button class="btn" onclick="simulasi('hutan')">Ekosistem Hutan</button>
+        <button class="btn" onclick="simulasi('perairan')">Ekosistem Perairan</button>
+        <div id="sim-display" class="sim-box">Pilih ekosistem untuk mulai...</div>
+    </section>
+
+    <section class="quiz-container">
+        <h2>Kuis Evaluasi</h2>
+        <div id="quiz-box">
+            <h3 id="question">Pertanyaan akan muncul di sini...</h3>
+            <div id="options"></div>
+        </div>
+        <div id="result" class="hidden">
+            <h3 id="score-text"></h3>
+            <button class="btn" onclick="location.reload()">Ulangi Kuis</button>
+        </div>
+    </section>
+</div>
+
+<script>
+// Logic Simulasi
+function simulasi(type) {
+    let display = document.getElementById('sim-display');
+    let data = (type === 'hutan') ? ["Produsen: 1000 kkal", "Herbivora: 100 kkal", "Karnivora: 10 kkal", "Predator: 1 kkal"] :
+                                   ["Fitoplankton: 1000 kkal", "Zooplankton: 100 kkal", "Ikan: 10 kkal", "Hiu: 1 kkal"];
+    let html = `<h3>Simulasi ${type}</h3>`;
+    data.forEach((item, i) => {
+        html += `<div class="trophic-card">${item}</div>`;
+        if(i < data.length - 1) html += `<div style="text-align:center; font-size:20px;">↓</div>`;
+    });
+    display.innerHTML = html;
+}
+
+// Logic Kuis
+const quizData = [
+    { q: "Apa yang dimaksud dengan ekosistem?", a: ["Kumpulan individu", "Interaksi biotik & abiotik", "Kumpulan hewan"], correct: 1 },
+    { q: "Berapa persen energi yang berpindah antar tingkat trofik?", a: ["10%", "50%", "90%"], correct: 0 },
+    { q: "Apa dampak utama monokultur?", a: ["Biodiversitas naik", "Biodiversitas turun", "Tanah subur"], correct: 1 }
+];
+
+let currentQ = 0;
+let score = 0;
+
+function loadQuiz() {
+    let qBox = document.getElementById('quiz-box');
+    let optBox = document.getElementById('options');
+    optBox.innerHTML = '';
+    document.getElementById('question').innerText = quizData[currentQ].q;
+    quizData[currentQ].a.forEach((opt, i) => {
+        let btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.className = 'btn';
+        btn.onclick = () => check(i);
+        optBox.appendChild(btn);
+    });
+}
+
+function check(i) {
+    if(i === quizData[currentQ].correct) score++;
+    currentQ++;
+    if(currentQ < quizData.length) loadQuiz();
+    else showResult();
+}
+
+function showResult() {
+    document.getElementById('quiz-box').classList.add('hidden');
+    document.getElementById('result').classList.remove('hidden');
+    document.getElementById('score-text').innerText = `Skor Anda: ${score}/${quizData.length}`;
+}
+
+loadQuiz();
+</script>
+
+</body>
+</html>

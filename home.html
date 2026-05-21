@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulasi Aliran Energi Ekosistem</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
+        .controls { text-align: center; margin-bottom: 30px; }
+        button { padding: 12px 20px; margin: 5px; cursor: pointer; border: none; border-radius: 8px; background: #2e7d32; color: white; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #1b5e20; transform: scale(1.05); }
+        
+        /* Layout Aliran Panah */
+        .flow-container { display: flex; flex-direction: column; align-items: center; }
+        .trophic-card { width: 100%; max-width: 350px; padding: 15px; background: #fff; border: 2px solid #2e7d32; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; position: relative; }
+        .arrow { font-size: 30px; color: #2e7d32; margin: 5px 0; font-weight: bold; }
+        .energy-val { font-weight: bold; color: #d84315; font-size: 1.1em; }
+        .desc { font-size: 0.85em; color: #555; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 style="text-align: center;">Selamat Datang di Website</h1>
+    <p style="text-align: center; color: #666;">Ini merupakan website </p>
+    
+    <div class="controls">
+        <button><a style="color: #fff;" href="EKOSISTEM 1.html">Modul Pembelajaran: Materi</a></button>
+        <button><a style="color: #fff;" href="EKOSISTEM 2.html">Simulasi Aliran Energi</a></button>
+        <button><a style="color: #fff;" href="EKOSISTEM 1.html">Modul Pembelajaran: Ekosistem</a></button>
+    </div>
+
+    <div id="output" class="flow-container">
+        </div>
+</div>
+
+<script>
+const data = {
+    hutan: {
+        title: "Ekosistem Terestrial (Hutan)",
+        levels: [
+            { name: "Produsen (Tumbuhan)", desc: "Energi Matahari (1000 kkal)" },
+            { name: "Konsumen I (Herbivora)", desc: "Makan Tumbuhan" },
+            { name: "Konsumen II (Karnivora)", desc: "Makan Herbivora" },
+            { name: "Konsumen Puncak (Predator)", desc: "Predator Utama" }
+        ]
+    },
+    perairan: {
+        title: "Ekosistem Perairan (Laut)",
+        levels: [
+            { name: "Produsen (Fitoplankton)", desc: "Energi Matahari (1000 kkal)" },
+            { name: "Konsumen I (Zooplankton)", desc: "Makan Fitoplankton" },
+            { name: "Konsumen II (Ikan Kecil)", desc: "Makan Zooplankton" },
+            { name: "Konsumen Puncak (Hiu)", desc: "Predator Utama" }
+        ]
+    }
+};
+
+function startSim(env) {
+    let d = data[env];
+    let energy = 1000;
+    let html = `<h3>${d.title}</h3>`;
+    
+    d.levels.forEach((lvl, index) => {
+        // Membuat Kartu
+        html += `
+            <div class="trophic-card">
+                <b>${lvl.name}</b><br>
+                <span class="energy-val">${energy.toFixed(1)} kkal</span><br>
+                <div class="desc">${lvl.desc}</div>
+            </div>
+        `;
+        
+        // Menambahkan Panah (Kecuali item terakhir)
+        if (index < d.levels.length - 1) {
+            html += `<div class="arrow">↓</div>`;
+            energy = energy * 0.1; // Logika Hukum 10%
+        }
+    });
+    
+    html += `<p style="font-size:0.9em; margin-top:20px;"><i>Catatan: Energi hilang 90% sebagai panas di setiap transisi.</i></p>`;
+    
+    document.getElementById('output').innerHTML = html;
+}
+</script>
+</body>
+</html>
